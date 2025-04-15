@@ -2,11 +2,12 @@ import React, {useState} from 'react';
 import {Button, FlatList, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import Home from './app/home';
+import Onboarding from './app/onboarding';
 export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
-        <Home/>
+        <Onboarding/>
       </SafeAreaView>
     </SafeAreaProvider>
   );
