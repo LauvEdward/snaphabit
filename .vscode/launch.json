@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Expo Start iOS",
+        "type": "pwa-node",
+        "request": "launch",
+        "runtimeExecutable": "npx",
+        "runtimeArgs": ["expo", "start", "--ios"],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
+    ]
+  }
+  
