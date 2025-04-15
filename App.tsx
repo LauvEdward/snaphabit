@@ -1,9 +1,14 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, {useState} from 'react';
+import {Button, FlatList, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import Home from './app/home';
 export default function App() {
   return (
-    <SafeAreaProvider></SafeAreaProvider>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <Home/>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -11,7 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0f8ff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
 });
