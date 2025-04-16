@@ -1,14 +1,14 @@
-import {Image, Button, StyleSheet, Text, TouchableOpacity, View, ImageBackground} from "react-native";
-
+import {StyleSheet, Text, TouchableOpacity, View, ImageBackground} from "react-native";
 const backgroundImage = require('../assets/daily-activity.png')
-export default function Onboarding() {
+// @ts-ignore
+export default function Onboarding({navigation}) {
   return (
     <ImageBackground source={backgroundImage} style={styles.image}>
       <View>
         <Text style={styles.textHeader}>SnapHabit</Text>
         <Text style={styles.textDescription}>Build Habit Easily</Text>
       </View>
-      <TouchableOpacity onPress={()=>{}}>
+      <TouchableOpacity onPress={()=> {navigation.replace('Home')}}>
         <View style={styles.button}>
           <Text style={{ color: 'white' }}>Get Started</Text>
         </View>
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 3,
     },
-    shadowOpacity:  0.17,
+    shadowOpacity: 0.17,
     shadowRadius: 3.05,
   },
   textHeader: {
