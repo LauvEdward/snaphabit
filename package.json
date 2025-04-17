@@ -10,6 +10,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-community/cli": "^18.0.0",
     "@react-native-community/datetimepicker": "^8.3.0",
     "expo": "~52.0.46",
     "expo-router": "^4.0.20",

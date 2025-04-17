@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from "expo-router/build/fork/native-stack/cr
 import {NavigationContainer} from "expo-router/build/fork/NavigationContainer";
 import Home from "./app/home";
 import Onboarding from "./app/onboarding";
-import CreateHabitScreen from "./components/create-habit";
+import CreateHabitScreen from "./app/create-habit";
 const Stack = createNativeStackNavigator();
 
 export default function App() {

@@ -1,23 +1,45 @@
 import {Button, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {useState} from "react";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import Colors from "../components/colors"
 
 const weekdays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']
 export default function CreateHabitScreen() {
   const [icon, setIcon] = useState("")
+  const [nameHabit, setNameHabit] = useState("")
   const [isDaily, setIsDaily] = useState(true)
   const [reminderEnable, setReminderEnable] = useState(false)
   const [reminderTimes, setReminderTimes] = useState<Date[]>([])
-  const addDate = () => {
+  const [selectedDay, setSelectedDay] = useState<String[]>([])
+  const addDateTime = () => {
     setReminderTimes([...reminderTimes, new Date()])
   }
+  const addDay = (day: String) => {
+    const isExist = selectedDay.includes(day);
+    if (isExist) {
+      setSelectedDay(selectedDay.filter(d => d !== day))
+    } else {
+      setSelectedDay([...selectedDay, day])
+    }
+  }
+  const saveHabit = () => {
+    console.log(
+      nameHabit,
+      icon,
+      isDaily ? weekdays : selectedDay,
+      reminderTimes
+      )
+  }
+  // @ts-ignore
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor: Colors.backgroundColor}}>
       <View style={styles.container}>
         <Text style={styles.title}>Tạo thói quen mới</Text>
         <Text style={styles.description}>📌 Tên thói quen</Text>
         <TextInput
           style={styles.inputText}
           placeholder={"Ví dụ: đọc sách"}
+          onChangeText={setNameHabit}
         ></TextInput>
         <Text style={styles.description}>🎨 Chọn icon</Text>
         <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
@@ -54,8 +76,13 @@ export default function CreateHabitScreen() {
           <>
             <View style={{flexDirection: "row", justifyContent: "center", marginBottom: 20}}>
               {weekdays.map((day) =>
-                (<TouchableOpacity key={day}>
-                  <Text style={styles.dateBox}>{day}</Text>
+                (<TouchableOpacity key={day} onPress={() => addDay(day)}>
+                  <Text style={{
+                    padding: 10,
+                    backgroundColor: selectedDay.includes(day) ? "#d3d3d3" : "white",
+                    margin: 5,
+                    borderRadius: 5
+                  }}>{day}</Text>
                 </TouchableOpacity>))}
             </View>
           </>
@@ -66,25 +93,30 @@ export default function CreateHabitScreen() {
         </View>
         {reminderEnable && (
           <>
-            {reminderTimes.map((time, index) => (
-              <TouchableOpacity
-                key={index}
-                // onPress={() => setShowPickerIndex(index)}
-                style={{
-                  padding: 10,
-                  backgroundColor: '#eee',
-                  borderRadius: 8,
-                  marginBottom: 8,
-                }}
-              >
-                <Text>{time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</Text>
-              </TouchableOpacity>
+            {reminderTimes.map((item, index) => (
+              <View key={index} style={{flex: 1, alignItems: "center", marginBottom: 20}}>
+                <RNDateTimePicker
+                  mode="time"
+                  value={item}
+                  display="default"
+                  onChange={(event, date) => {
+                    const newRemiderTimes = reminderTimes.map((item, i) => {
+                      if (i === index) {
+                        return date;
+                      } else {
+                        return item;
+                      }
+                    });
+                    setReminderTimes((newRemiderTimes || []).filter((item): item is Date => item !== undefined));
+                  }}
+                ></RNDateTimePicker>
+              </View>
             ))}
-            <Button title="➕ Thêm giờ nhắc" onPress={addDate}/>
+            <Button title="➕ Thêm giờ nhắc" onPress={addDateTime}/>
           </>
         )}
         <View style={styles.buttonSave}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={saveHabit}>
             <Text style={{color: "white"}}>✅ Lưu thói quen</Text>
           </TouchableOpacity>
         </View>
@@ -103,10 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   dateBox: {
-    padding: 10,
-    backgroundColor: "white",
-    margin: 5,
-    borderRadius: 5
+
   },
   inputText: {
     padding: 10,
@@ -118,7 +147,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20
   },
   container: {
-    padding: 10
+    padding: 10,
+    backgroundColor: Colors.backgroundColor
   },
   title: {
     fontWeight: "bold",

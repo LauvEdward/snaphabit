@@ -1,37 +1,32 @@
 import {Text, View, StyleSheet, FlatList, TouchableOpacity} from "react-native";
-import {useState} from "react";
+import {Key, useState} from "react";
 import Octicons from "@expo/vector-icons/Octicons";
-import DialogContainer from "react-native-dialog/lib/Container";
-import DialogTitle from "react-native-dialog/lib/Title";
-import DialogDescription from "react-native-dialog/lib/Description";
-import DialogButton from "react-native-dialog/lib/Button";
-import DialogInput from "react-native-dialog/lib/Input";
+import Colors from "../components/colors"
 
 
 // @ts-ignore
 export default function Home({navigation}) {
   const [activity, setActivity] = useState([
-    {name: "Tập thể dục", image: ""},
-    {name: "Đọc sách", image: ""},
-    {name: "Uống đủ nước", image: ""},
+    {icon: "💧", name: "Tập thể dục", day: ["T2", "T3"]},
+    {icon: "💧", name: "Đọc sách", day: ["T2", "T3"]},
+    {icon: "💧", name: "Uống đủ nước", day: ["T2", "T3"]},
   ])
-  const [visible, setVisible] = useState(false);
-  // const addItem = (item: { name: string; image: string; }) => {
-  //   setActivity([...activity, item]);
-  // }
   // @ts-ignore
-  const renderItem = ({ item }) => (
+  const renderItem = ({item}) => (
     <View style={styles.list}>
-      <Text style={styles.item}>{item.name}</Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text>{item.icon}</Text>
+        <Text style={{fontSize: 17, fontWeight: "500"}}>{item.name}</Text>
+      </View>
+      {item.day.map((dayItem: String, index: Key) => (
+        <Text key={index}
+              style={{backgroundColor: "red"}}
+        >{dayItem}</Text>
+      ))}
     </View>
   );
   return (
     <View style={styles.container}>
-      <DialogContainer visible={visible}>
-        <DialogTitle>Thêm thói quen</DialogTitle>
-        <DialogDescription>Tạo thói quen mới</DialogDescription>
-        <DialogButton label={"OK"} onPress={() => setVisible(false)}></DialogButton>
-      </DialogContainer>
       <Text style={styles.textHeader}>Activity</Text>
       <FlatList data={activity} renderItem={renderItem}/>
       <TouchableOpacity onPress={() => {navigation.navigate("CreateHabit")}}>
@@ -71,13 +66,9 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 10,
-  },
-  item: {
-    backgroundColor: "pink", // Replace with your secondary color
-    padding: 10,
-    marginVertical: 0,
-    borderRadius: 8,
-    width: "100%",
+    backgroundColor: Colors.white,
+    margin: 10,
+    borderRadius: 10
   },
   textHeader: {
     fontSize: 50,
