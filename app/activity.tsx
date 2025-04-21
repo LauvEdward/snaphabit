@@ -1,19 +1,45 @@
-import {Text, View, StyleSheet, FlatList, TouchableOpacity} from "react-native";
-import {Key, useState} from "react";
+import {Text, View, StyleSheet, FlatList, TouchableOpacity, ScrollView} from "react-native";
+import {Key, useEffect, useState} from "react";
 import Octicons from "@expo/vector-icons/Octicons";
 import Colors from "../components/colors"
 import Icon from 'react-native-vector-icons/EvilIcons';
+import dayjs from "dayjs";
+import colors from "../components/colors";
 
+var isoWeek = require("dayjs/plugin/isoWeek");
+var updateLocale = require('dayjs/plugin/updateLocale')
+var localeData = require("dayjs/plugin/localeData");
 // @ts-ignore
 export default function Home({navigation}) {
+  const [dayOfWeek, setDayOfWeek] = useState<dayjs.Dayjs[]>([])
+  const [selectedDay, setSelectedDay] = useState<dayjs.Dayjs>()
+  useEffect(() => {
+    dayjs.extend(isoWeek);
+    dayjs.extend(localeData);
+    dayjs.extend(updateLocale);
+    setSelectedDay(dayjs());
+    const days: dayjs.Dayjs[] = [];
+    for (let i = 0; i < 7; i++) {
+      const day = dayjs().day(i);
+      days.push(day);
+    }
+    setDayOfWeek(days);
+  }, [])
+
   const [activity, setActivity] = useState([
+    {icon: "💧", name: "Tập thể dục", day: ['T2', 'T3', 'T4', 'T5']},
+    {icon: "💧", name: "Đọc sách", day: ['T5', 'T6', 'T7', 'CN']},
+    {icon: "💧", name: "Uống đủ nước", day: ['T6', 'T7', 'CN']},
+    {icon: "💧", name: "Tập thể dục", day: ['T2', 'T3', 'T4', 'T5']},
+    {icon: "💧", name: "Đọc sách", day: ['T5', 'T6', 'T7', 'CN']},
+    {icon: "💧", name: "Uống đủ nước", day: ['T6', 'T7', 'CN']},
     {icon: "💧", name: "Tập thể dục", day: ['T2', 'T3', 'T4', 'T5']},
     {icon: "💧", name: "Đọc sách", day: ['T5', 'T6', 'T7', 'CN']},
     {icon: "💧", name: "Uống đủ nước", day: ['T6', 'T7', 'CN']}
   ])
   // @ts-ignore
-  const renderItem = ({item}) => (
-    <TouchableOpacity>
+  const renderItem = (item, index) => (
+    <TouchableOpacity key={index}>
       <View style={styles.list}>
         <View style={{flexDirection: 'row', justifyContent: "space-between", alignItems: "center"}}>
           <View style={{flexDirection: 'row', alignItems: "center"}}>
@@ -21,10 +47,11 @@ export default function Home({navigation}) {
             <View>
               <Text style={{fontSize: 17}}>{item.name}</Text>
               <View style={{flexDirection: 'row', alignItems: "center", padding: 5}}>
-                {item.day.map((dayItem: String, index: Key) => (
-                  <Text key={index}
+                {item.day.map((dayItem: String, indexItem: Key) => (
+                  <Text key={indexItem}
                         style={{backgroundColor: "#d3d3d3", padding: 5, marginEnd: 5, borderRadius: 5, fontSize: 8}}
-                  >{dayItem}</Text>
+                  >{dayItem}
+                  </Text>
                 ))}
               </View>
             </View>
@@ -39,18 +66,19 @@ export default function Home({navigation}) {
       <Text style={styles.textHeader}>Activity</Text>
       <View style={{
         padding: 10,
-        backgroundColor: "#fff",
+        backgroundColor: Colors.veryLightGray,
         borderRadius: 10,
         marginBottom: 20,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between"}}>
-        {['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map((item, index) => (
-          <>
-            <TouchableOpacity>
+        justifyContent: "space-between"
+      }}>
+        {dayOfWeek.map((item, index) => (
+          <View key={index}>
+            <TouchableOpacity onPress={()=>setSelectedDay(item)}>
               <View
                 style={{
-                  backgroundColor: "#fff",
+                  backgroundColor: selectedDay?.isSame(item) ? Colors.mintGreen : "#fff",
                   alignItems: 'center',
                   padding: 10,
                   borderRadius: 10,
@@ -58,18 +86,27 @@ export default function Home({navigation}) {
                   borderWidth: 1
                 }}
                 key={index}>
-                <Text style={{color: "#000", marginBottom: 10}}>{item}</Text>
-                <Text style={{color: "#000"}}>{index}</Text>
+                <Text style={{color: "#000", marginBottom: 10}}>{item.format('ddd')}</Text>
+                <Text style={{color: "#000"}}>{item.date()}</Text>
               </View>
             </TouchableOpacity>
-          </>
+          </View>
         ))}
       </View>
       <Text style={styles.textHeader}>Habits</Text>
-      <FlatList data={activity} renderItem={renderItem}/>
-      <TouchableOpacity onPress={() => {navigation.navigate("CreateHabit")}}>
+      <View style={{flex: 1}}>
+        <ScrollView>
+          {activity.map((item, index) => (
+            renderItem(item, index)
+          ))}
+        </ScrollView>
+
+      </View>
+      <TouchableOpacity onPress={() => {
+        navigation.navigate("CreateHabit")
+      }}>
         <View style={styles.floatingButton}>
-          <Octicons name="diff-added" size={24} color="white" />
+          <Octicons name="diff-added" size={24} color="white"/>
         </View>
       </TouchableOpacity>
     </View>);
@@ -93,21 +130,21 @@ const styles = StyleSheet.create({
     right: 0,
     elevation: 5, // For Android shadow
     shadowColor: "#000", // For iOS shadow
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
   container: {
     flex: 1,
-    backgroundColor: "rgba(251, 242, 231, 1)",
+    backgroundColor: Colors.offWhite,
     padding: 20
   },
   list: {
     padding: 10,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.offWhite,
     marginBottom: 5,
     borderRadius: 10,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {width: 0, height: 1},
     shadowOpacity: 0.1,
     shadowRadius: 1,
   },

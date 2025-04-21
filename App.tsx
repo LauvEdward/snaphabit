@@ -2,9 +2,10 @@ import {StyleSheet} from 'react-native';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from "expo-router/build/fork/native-stack/createNativeStackNavigator";
 import {NavigationContainer} from "expo-router/build/fork/NavigationContainer";
-import Home from "./app/home";
 import Onboarding from "./app/onboarding";
 import CreateHabitScreen from "./app/create-habit";
+import Home from "./app/activity";
+import Colors from "./components/colors";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -26,6 +27,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(251, 242, 231, 1)',
+    backgroundColor: Colors.offWhite,
   },
 });

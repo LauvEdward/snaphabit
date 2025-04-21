@@ -55,7 +55,7 @@ export default function CreateHabitScreen({navigation}) {
       onCreate(newHabit); // gọi callback
     }
     console.log(newHabit)
-    LocalStorage.shared.saveHabitDays("1", newHabit);
+    // LocalStorage.shared.saveHabitDays("1", newHabit);
     navigation.goBack();
   }
   // @ts-ignore
@@ -84,7 +84,7 @@ export default function CreateHabitScreen({navigation}) {
                       padding: 10,
                       margin: 8,
                       borderRadius: 5,
-                      backgroundColor: icon === item ? "#d3d3d3" : "white",
+                      backgroundColor: icon === item ? "#d3d3d3" : Colors.veryLightGray,
                       marginBottom: 20,
                     }}>
                       <Text style={{fontSize: 20}}>{item}</Text>
